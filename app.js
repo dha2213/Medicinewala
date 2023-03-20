@@ -44,8 +44,8 @@ app.get('/chatbot', (req, res) => {
     res.render(path.join(__dirname, 'chatpage'), { 'session': session.loggedin });
 });
 
-mongoose.connect('mongodb+srv://medicinewala:medi1234@cluster0.17zxjdh.mongodb.net/test');
-//mongoose.connect('mongodb://127.0.0.1:27017/myapp');
+//mongoose.connect('mongodb+srv://medicinewala:medi1234@cluster0.17zxjdh.mongodb.net/test');
+mongoose.connect('mongodb://127.0.0.1:27017/myapp');
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error: "));
 db.once("open", function () {
@@ -543,6 +543,7 @@ app.post('/book_medicine', (req, res) => {
         
         var tempMedIds = Object.values(req.body)
         var flagQts = true;
+        console.log(tempMedIds);
         const medQts = []; const medIds = [];
         for (var i=0; i<tempMedIds.length; i++) {
             if (tempMedIds[i]) {
@@ -570,7 +571,37 @@ app.post('/book_medicine', (req, res) => {
                     User.findOne({'Email': session.email}, (err, usr) => {
                         book.Id = b_id; book.Type = 'Medicine'; book.UserId = usr.Id; book.MedicineId = med.Id;
                         book.MedicineName = med.Name; book.Quantity = quantity; let today = new Date().toISOString().slice(0, 10); book.Date = today;
-                        book.save();
+                        book.save()
+                          .then(() => {
+                          // Send new OTP to user's email
+                          const transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                              user: 'medicinewala13@gmail.com', // Change this to your email address
+                              pass: 'obgnbityicxuzwqi', // Change this to your email password or use environment variable
+                            },
+                          });
+                    
+                          const mailOptions = {
+                            from: 'medicinewala13@gmail.com', // Change this to your email address
+                            to: session.email,
+                            subject: 'Booking Confirmation!',
+                            html: `
+                            <html>
+                            <body>
+                              <h2>New Medicine Request</h2>
+                              <p>Medicine ID: ${book.MedicineId}</p>
+                              <p>Medicine Name: ${book.MedicineName}</p>
+                              <p>Quantity: ${book.Quantity}</p>
+                              <p>Date: ${book.Date}</p>
+                              <p>User ID: ${book.UserId}</p>
+                            </body>
+                          </html>`,
+                          };
+                    
+                        transporter.sendMail(mailOptions);
+                        })
+                        .catch((err) => console.log(err.message));
                         res.render(path.join(__dirname, 'medicine'), { 'session': session.loggedin, 'booking': 'success' });
                     }); 
                 } else{
