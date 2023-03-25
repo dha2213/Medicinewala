@@ -914,7 +914,127 @@ app.post('/book_medicine', (req, res) => {
         }
       });
     }
+<<<<<<< HEAD
   }
+=======
+});
+app.post('/test_booking', (req, res) => {
+    const { date, time, usrId, testIds } = req.body;
+    if (!usrId) {
+        res.render(path.join(__dirname, 'lab_test'), { 'session': session.loggedin, 'usr': null, 'testIds': null, 'booking': 'error', 'disease': -1 });
+    }
+    else {
+        var arr = testIds.split(',');
+        localStorage.getItem(flag_b);
+        b_id = "B" + 0 + flag_b;
+        flag_b = flag_b + 1;
+        localStorage.setItem(flag_b);
+        for (var i=0; i<arr.length; i++) {
+            Test.findOne({'Id': arr[i]}, (err, test) => {
+                const book = new Booking();
+                book.Id = b_id; book.Type = "Lab Test"; book.UserId = usrId; book.TestId = test.Id; book.TestName = test.Name; book.Date = date;
+                book.save();
+            });
+        }
+        User.findOne({ 'Id': usrId }, (err, user) => {
+            res.render(path.join(__dirname, 'lab_test'), { 'session': session.loggedin, 'usr': user, 'testIds': null, 'booking': 'success', 'disease': -1 });
+        });
+    }
+})
+
+app.post('/disease_prediction', (req, res) => {
+    const { sex, age, restbps, chol, thalach, oldpeak, cp, fbs, recg, exang, slope, ca, thal } = req.body;
+    var asex = [0, 0], acp = [0, 0, 0, 0], afbs = [0, 0], arecg = [0, 0, 0], aexang = [0, 0], aslope = [0, 0, 0], aca = [0, 0, 0, 0, 0], athal = [0, 0, 0, 0];
+    asex[sex] = 1; acp[cp] = 1; afbs[fbs] = 1; arecg[recg] = 1; aexang[exang] = 1; aslope[slope] = 1; aca[ca] = 1; athal[thal] = 1;
+    var list = []; list.push(age); list.push(restbps); list.push(chol); list.push(thalach);
+    list.push(oldpeak);
+    var final_list = list.concat(asex, acp, afbs, arecg, aexang, aslope, aca, athal);
+    const spawn = require("child_process").spawn;
+    const pythonProcess = spawn('python3', ["/home/denny3010/Desktop/Software_lab/MedCompanion/predict/predict.py", final_list]);
+    pythonProcess.stdout.on('data', (data) => {
+        var output = String.fromCharCode.apply(null, data).slice(0, 1)
+        User.findOne({ 'Email': session.email }, (err, usr) => {
+            res.render(path.join(__dirname, 'lab_test'), { 'session': session.loggedin, 'usr': usr, 'testIds': null, 'booking': null, 'disease': Number(output) });
+        });
+    });
+});
+
+app.post('/book_medicine', (req, res) => {
+    if (!session.loggedin) {
+        res.render(path.join(__dirname, 'medicine'), { 'session': session.loggedin, 'booking': 'error' });
+    } else {
+        
+        var tempMedIds = Object.values(req.body)
+        var flagQts = true;
+        console.log(tempMedIds);
+        const medQts = []; const medIds = [];
+        for (var i=0; i<tempMedIds.length; i++) {
+            if (tempMedIds[i]) {
+                medIds.push(i);
+                medQts.push(Number(tempMedIds[i]));
+            } else {
+                continue;
+            }
+        }
+        const mIds=[];
+        for (var i=0; i<medIds.length; i++) {
+            mIds.push('M000' + (medIds[i] + 1));
+        }
+        for(var i=0; i<mIds.length; i++) {
+            const quantity =  medQts[i];
+            Medicine.findOne({'Id': mIds[i]}, (err, med) => {
+                localStorage.getItem(flag_b);
+                b_id = "B" + 0 + flag_b;
+                flag_b = flag_b + 1;
+                localStorage.setItem(flag_b);
+                const book = new Booking();
+                if (med.Quantity-quantity>=0) {
+                    med.Quantity = med.Quantity - quantity;
+                    med.save();
+                    User.findOne({'Email': session.email}, (err, usr) => {
+                        book.Id = b_id; book.Type = 'Medicine'; book.UserId = usr.Id; book.MedicineId = med.Id;
+                        book.MedicineName = med.Name; book.Quantity = quantity; let today = new Date().toISOString().slice(0, 10); book.Date = today;
+                        book.save()
+                          .then(() => {
+                          // Send new OTP to user's email
+                          const transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                              user: 'medicinewala13@gmail.com', // Change this to your email address
+                              pass: 'obgnbityicxuzwqi', // Change this to your email password or use environment variable
+                            },
+                          });
+                    
+                          const mailOptions = {
+                            from: 'medicinewala13@gmail.com', // Change this to your email address
+                            to: session.email,
+                            subject: 'Booking Confirmation!',
+                            html: `
+                            <html>
+                            <body>
+                              <h2>New Medicine Request</h2>
+                              <p>Medicine ID: ${book.MedicineId}</p>
+                              <p>Medicine Name: ${book.MedicineName}</p>
+                              <p>Quantity: ${book.Quantity}</p>
+                              <p>Date: ${book.Date}</p>
+                              <p>User ID: ${book.UserId}</p>
+                            </body>
+                          </html>`,
+                          };
+                    
+                        transporter.sendMail(mailOptions);
+                        })
+                        .catch((err) => console.log(err.message));
+                        res.render(path.join(__dirname, 'medicine'), { 'session': session.loggedin, 'booking': 'success' });
+                    }); 
+                } else{
+                    flagQts = false;                
+                    res.render(path.join(__dirname, 'medicine'), { 'session': session.loggedin, 'booking': 'insufficient'});
+                }
+            });
+        }
+    }   
+>>>>>>> 4b822e8e8abc06001891ea762b2abe11633da15f
 });
 
 app.post('/contact_us', (req, res) => {
