@@ -20,6 +20,7 @@
     "ejs": "^3.1.6",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
+    "fs": "^0.0.1-security",
     "list": "^2.0.19",
     "mongodb": "^4.4.1",
     "mongoose": "^6.2.7",
