@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Verify OTP</title>
+  <link rel="stylesheet" href="./pharmavarifyotp.css">
+</head>
+<body>
+  <% if (email) { %>
+    <p>An OTP has been sent to <%= email %>.</p>
+  <% } %>
+  <% if (error) { %>
+    <p>Error: <%= error %></p>
+  <% } %>
+  <form action="/pharmaverifyotp" method="post">
+    <label for="otp" >Enter OTP:</label>
+    <input type="text" id="otp" name="otp" required>
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+  <form action="/pharmaresendotp" method="post">
+    <button type="submit">Resend OTP</button>
+  </form>
+</body>
+</html>
+

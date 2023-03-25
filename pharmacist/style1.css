@@ -1,0 +1,70 @@
+/* Style for form container */
+.form-container {
+	width: 50%;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #ccc;
+	background-color: #f2f2f2;
+}
+
+/* Style for form input fields */
+input[type=text],
+input[type=number],
+input[type=date] {
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+/* Style for form submit button */
+input[type=submit] {
+	background-color: #4CAF50;
+	color: white;
+	padding: 12px 20px;
+	margin-top: 10px;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+/* Style for form submit button on hover */
+input[type=submit]:hover {
+	background-color: #45a049;
+}
+
+/* Style for header container */
+.header {
+	overflow: hidden;
+	background-color: #f1f1f1;
+	padding: 20px;
+	text-align: center;
+}
+
+/* Style for header links */
+.header a {
+	float: right;
+	color: black;
+	text-align: center;
+	padding: 12px;
+	text-decoration: none;
+	font-size: 18px;
+	line-height: 25px;
+	border-radius: 4px;
+}
+
+/* Style for header links on hover */
+.header a:hover {
+	background-color: #ddd;
+	color: black;
+}
+
+/* Style for clear floats */
+.clearfix::after {
+	content: "";
+	clear: both;
+	display: table;
+}
