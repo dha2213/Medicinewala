@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+
+        form {
+            width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        label img {
+            height: 50px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        label span {
+            font-size: 18px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+
+        input[type="submit"] {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #333;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Payment Page</h1>
+    <form action="/process-payment" method="post">
+        <h2>Select Payment Method</h2>
+        <label>
+            <input type="radio" name="paymentMethod" value="amazonPay">
+            <img src="images/payment/amazonPay.png" alt="Amazon Pay"> <span>Amazon Pay</span>
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="gPay">
+            <img src="images/payment/gPay.png" alt="Google Pay"> <span>Google Pay</span>
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="paytm">
+            <img src="images/payment/paytm.png" alt="Paytm"> <span>Paytm</span>
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="phonePay">
+            <img src="images/payment/phonePay.png" alt="PhonePe"> <span>PhonePe</span>
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="upi">
+            <img src="images/payment/upi.png" alt="UPI"> <span>UPI</span>
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="netbanking">
+            <img src="images/payment/netbanking.png" alt="Netbanking"> <span>Netbanking</span>
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="card">
+            <img src="images/payment/card.png" alt="Credit/Debit Card"> <span>Credit/Debit Card</span>
+        </label>
+        <div id="card-details" style="display: none;">
+            <label>
+                Card Number
+                <input type="text" name="cardNumber">
+            </label>
+            <label>
+                Expiry Date
+                <input type="text" name="expiryDate">
+            </label>
+            <label>
+                CVV
+                <input type="text" name="cvv">
+            </label>
+        </div>
+        <input type="submit" value="Make Payment">
+    </form>
+    <script>
+        // Show/hide credit/debit card details based on selection
+        const cardRadio = document.querySelector('input[value="card"]');
+        const cardDetails = document.querySelector('#card-details');
+        cardRadio.addEventListener('change', () => {
+            if (cardRadio.checked) {
+                cardDetails.style.display = 'block';
+            } else {
+                cardDetails.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+
+</html>

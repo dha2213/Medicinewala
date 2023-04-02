@@ -1,5 +1,3 @@
-'use strict'
-
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
@@ -7,39 +5,24 @@ const { prohairesis } = require('prohairesis');
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 var LocalStorage = require('node-localstorage').LocalStorage;
-var localStorage = new LocalStorage('./scratch');
+localStorage = new LocalStorage('./scratch');
 const session = require('express-session');
 const { time } = require('console');
 const { update } = require('list');
 const { Int32, ConnectionCheckOutFailedEvent } = require('mongodb');
 const { type } = require('os');
+
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
+
 const app = express();
-
-// const bodyParser = require('body-parser');
-const cors = require("cors");
-const dotenv = require("dotenv");
-const Razorpay = require("razorpay");
-const crypto = require("crypto");
-
-dotenv.config();
-app.use(express.json());
-app.use(cors());
-
-app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-// app.use("/api/payment/", paymentRoutes);
 const port = process.env.PORT || 5000;
 var email1;
 app.use(express.static(__dirname));
 app.use(morgan('dev'));
-
-app.use(require("body-parser").json());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
     secret: 'secret',
     resave: true,
@@ -157,7 +140,7 @@ db.once("open", function () {
 const User = mongoose.model('User', usrSchema);
 
 const bookSchema = new mongoose.Schema({
-    Id: String,Price: Number, Type: String, UserId: String, DoctorId: String, DoctorName: String, DoctorField: String, TestId: String, TestName: String, TestResult: String, MedicineId: String, MedicineName: String, Date: Date, Quantity: Number
+    Id: String, Type: String, UserId: String, DoctorId: String, DoctorName: String, DoctorField: String, TestId: String, TestName: String, TestResult: String, MedicineId: String, MedicineName: String, Date: Date, Quantity: Number
 });
 const Booking = mongoose.model('Booking', bookSchema);
 
@@ -177,42 +160,11 @@ const testSchema = new mongoose.Schema({
 const Test = mongoose.model('Test', testSchema);
 
 const medSchema = new mongoose.Schema({
-    Id: String, Price: Number, Name: String, Quantity: Number
+    Id: String, Name: String, Quantity: Number
 });
 const Medicine = mongoose.model('Medicine', medSchema);
 
-const addressSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  mobile: {
-    type: String,
-    required: true
-  },
-  pincode: {
-    type: String,
-    required: true
-  },
-  address: {
-    type: String,
-    required: true
-  },
-  city: {
-    type: String,
-    required: true
-  },
-  state: {
-    type: String,
-    required: true
-  },
-  country: {
-    type: String,
-    required: true
-  }
-});
 
-const Address = mongoose.model('Address', addressSchema);
 var flag_u = 1;
 localStorage.setItem(flag_u);
 // app.post('/signup', (req, res) => {
@@ -414,169 +366,6 @@ app.post('/signup', (req, res) => {
 });
 
 
-let p = 0;
-app.post('/submitAddress', (req, res) => {
-  const address = new Address({
-    name: req.body.name,
-    mobile: req.body.mobile,
-    pincode: req.body.pincode,
-    address: req.body.address,
-    city: req.body.city,
-    state: req.body.state,
-    country: req.body.country
-  });
- const price = p;
- console.log(price)
-  address.save().then(() => {
-    console.log('Address saved to database');
-    res.render(path.join(__dirname, 'payment'), { 'session': session.loggedin,
-      price:price,
-      email: email1,
-      error: 'User not found with this email!',
-      });
-    // res.redirect('/payment.ejs');
-  }).catch((err) => {
-    console.error(err);
-    res.redirect('/error.html');
-  });
-});
-
-// var instance = new Razorpay({
-//   key_id: 'rzp_test_YMP1b4R5kixkm3',
-//   key_secret: 'RdqFAzAH0I5tHxJsPqJuZnKq',
-// });
-
-// app.post('/processpayment', async (req, res) => {
-//   const paymentMethod = req.body.paymentMethod;
-//   let amount = 1; // Replace with the actual amount
-
-//   if (paymentMethod === 'wallet') {
-//     const walletOption = req.body.walletOption;
-//     // Handle wallet payments
-//   } else if (paymentMethod === 'upi') {
-//     const upiId = req.body.upiId;
-//     // Handle UPI payments
-//   } else if (paymentMethod === 'netbanking') {
-//     const netbankingID = req.body.netbankingID;
-//     // Handle netbanking payments
-//   } else if (paymentMethod === 'card') {
-//     const cardNumber = req.body.cardNumber;
-//     const expiryDate = req.body.expiryDate;
-//     const cvv = req.body.cvv;
-
-//     // Create a new payment
-//     const paymentOptions = {
-//       amount: amount,
-//       currency: 'INR',
-//       payment_capture: 1,
-//       notes: {
-//         order_id: 'ORDER_ID',
-//       },
-//     };
-//     instance.orders.create(options, function(err, order) {
-//       console.log(order);
-//       res.send({orderId: order.id});
-//     });
-//     // const payment = await razorpay.orders.create(paymentOptions);
-
-//     // Render the payment page with the payment details
-//     // res.render('payment', {
-//     //   paymentId: payment.id,
-//     //   amount: payment.amount,
-//     //   currency: payment.currency,
-//     //   keyId: razorpay.key_id,
-//     //   name: 'Medicinewala',
-//     //   description: 'Payment for Order ID: ORDER_ID',
-//     //   image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrh7DPnttqNv-l0eNbd6p0bw-JVDg8A415ALHYDntOcy3pfSk9UxO6PRPdNgwqXY0AabU&usqp=CAU',
-//     //   orderId: payment.notes.order_id,
-//     //   email: 'Medicinewala13@gmail.com',
-//     //   contact: '8741055817',
-//     //   cardNumber: cardNumber,
-//     //   expiryDate: expiryDate,
-//     //   cvv: cvv,
-//     // });
-//   }
-// });
-
-// app.post('/create/orderId',(req,res)=>{
-//   console.log("create order id requuest",req.body);
-//   var options = {
-//     amount: 1,
-//     currency: 'INR',
-//     reciept:"rcp-1"
-//   };
-//   instance.orders.create(options, function(err, order) {
-//     console.log(order);
-//     res.send({orderId: order.id});
-//   });
-// })
-
-// app.post("/api/payment/verify",(req,res)=>{
-
-//   let body=req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id;
- 
-//    var crypto = require("crypto");
-//    var expectedSignature = crypto.createHmac('sha256', 'RdqFAzAH0I5tHxJsPqJuZnKq')
-//                                    .update(body.toString())
-//                                    .digest('hex');
-//                                    console.log("sig received " ,req.body.response.razorpay_signature);
-//                                    console.log("sig generated " ,expectedSignature);
-//    var response = {"signatureIsValid":"false"}
-//    if(expectedSignature === req.body.response.razorpay_signature)
-//     response={"signatureIsValid":"true"}
-//        res.send(response);
-//    });
- 
-//  app.listen(port, () => {
-//    console.log(`Example app listening at http://localhost:${port}`)
-//  })
-
-// app.post("/processpayment", async (req, res) => {
-// 	try {
-// 		const instance = new Razorpay({
-// 			key_id: process.env.KEY_ID,
-// 			key_secret: process.env.KEY_SECRET,
-// 		});
-
-// 		const options = {
-// 			amount: req.body.amount * 100,
-// 			currency: "INR",
-// 			receipt: crypto.randomBytes(10).toString("hex"),
-// 		};
-
-// 		instance.orders.create(options, (error, order) => {
-// 			if (error) {
-// 				console.log(error);
-// 				return res.status(500).json({ message: "Something Went Wrong!" });
-// 			}
-// 			res.status(200).json({ data: order });
-// 		});
-// 	} catch (error) {
-// 		res.status(500).json({ message: "Internal Server Error!" });
-// 		console.log(error);
-// 	}
-// });
-
-// app.post("/verify", async (req, res) => {
-// 	try {
-// 		const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
-// 			req.body;
-// 		const sign = razorpay_order_id + "|" + razorpay_payment_id;
-// 		const expectedSign = crypto
-// 			.createHmac("sha256", process.env.KEY_SECRET)
-// 			.update(sign.toString())
-// 			.digest("hex");
-
-// 		if (razorpay_signature === expectedSign) {
-// 			return res.status(200).json({ message: "Payment verified successfully" });
-// 		} else {
-// 			return res.status(400).json({ message: "Invalid signature sent!" });
-// 		}
-// 	} catch (error) {
-// 		res.status(500).json({ message: "Internal Server Error!" });
-// 		console.log(error);
-// 	}
-// });
   
 app.post('/login', (req, res) => {
     const { email, psw } = req.body;
@@ -747,8 +536,6 @@ app.post('/disease_prediction', (req, res) => {
     });
 });
 
-var flag_b = 1;
-localStorage.setItem(flag_b);
 app.post('/book_medicine', (req, res) => {
     if (!session.loggedin) {
         res.render(path.join(__dirname, 'medicine'), { 'session': session.loggedin, 'booking': 'error' });
@@ -766,31 +553,19 @@ app.post('/book_medicine', (req, res) => {
             }
         }
         const mIds=[];
-        // let findQty=[];
-        // let findName=[];
-        // let tp = 0;
-        // let ps = false;
+        let findQty=[];
+        let findName=[];
+        let tp = 0;
+        let ps = false;
         const findToken = Math.floor(100000 + Math.random() * 900000);
         for (var i=0; i<medIds.length; i++) {
             mIds.push('M000' + (medIds[i] + 1));
         }
-
-
-        for(var i=0; i<mIds.length; i++) {
-          const quantity =  medQts[i];
-          Medicine.findOne({'Id': mIds[i]}, (err, med) => {
-            p +=med.Price*quantity;
-          })
-        }
-        res.render(path.join(__dirname, 'address'), { 
-          'session': session.loggedin,
-          price:p});
-        // return;
         for(var i=0; i<mIds.length; i++) {
             const quantity =  medQts[i];
             Medicine.findOne({'Id': mIds[i]}, (err, med) => {
                 localStorage.getItem(flag_b);
-                var b_id = "B" +findToken;
+                b_id = "B" +findToken;
                 flag_b = flag_b + 1;
                 localStorage.setItem(flag_b);
                 const book = new Booking();
@@ -798,12 +573,12 @@ app.post('/book_medicine', (req, res) => {
                     med.Quantity = med.Quantity - quantity;
                     med.save();
                     User.findOne({'Email': session.email}, (err, usr) => {
-                        book.Id = b_id; book.Type = 'Medicine'; book.UserId = usr.Id; book.MedicineId = med.Id; book.Price=med.Price;
+                        book.Id = b_id; book.Type = 'Medicine'; book.UserId = usr.Id; book.MedicineId = med.Id;
                         book.MedicineName = med.Name; book.Quantity = quantity; let today = new Date().toISOString().slice(0, 10); book.Date = today;
-                        // findName[tp]=med.Name;
-                        // findQty[tp]=quantity;
-                        // tp++;
-                        // ps = true;
+                        findName[tp]=med.Name;
+                        findQty[tp]=quantity;
+                        tp++;
+                        ps = true;
                         book.save();
                     }); 
                 } else{
@@ -830,7 +605,7 @@ app.post('/book_medicine', (req, res) => {
               },
             });
   
-            let htmlContent = "<h1>Your Booking has Confirmed!</h1>";
+            let htmlContent = "<h1>Booking Confirmation!</h1>";
             let tr = "B"+findToken;
             // console.log(tr)
             // docs.forEach((doc) => {
@@ -840,15 +615,13 @@ app.post('/book_medicine', (req, res) => {
             // });
             docs.forEach((doc) => {
               if(doc.Id==tr)
-              htmlContent += "<p>Medicine Name: " + doc. MedicineName+ " Medicine Quantity: " + doc.Quantity + " Price: "+ doc.Price+ "</p>";
+              htmlContent += "<p>Medicine Name: " + doc. MedicineName+ " Medicine Quantity: " + doc.Quantity + "</p>";
             });
   
-            htmlContent += "<p>Total price: "+ p+"</p>";
-            htmlContent += "<h2>Thank you for your booking.</h2>";
             const mailOptions = {
               from: 'medicinewala13@gmail.com', // Change this to your email address
               to: session.email,
-              subject: 'Confirmation of your medicine booking.',
+              subject: 'Email Verification',
               html: htmlContent,
             };
   
@@ -863,7 +636,7 @@ app.post('/book_medicine', (req, res) => {
           });
         }, 10000);
         
-        // res.render(path.join(__dirname, 'medicine'), { 'session': session.loggedin, 'booking': 'success' });
+        res.render(path.join(__dirname, 'medicine'), { 'session': session.loggedin, 'booking': 'success' });
       }    
 });
 

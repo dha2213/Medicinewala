@@ -1,0 +1,349 @@
+<!-- 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 30px;
+        }
+
+        form {
+            width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        label img {
+            height: 50px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        label span {
+            font-size: 18px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+
+        input[type="submit"] {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #333;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Payment Page</h1>
+   <form action="/create/orderId" method="post">
+        <h2>Select Payment Method</h2>
+        <label>
+            <input type="radio" name="paymentMethod" value="wallet" onclick="showWalletOptions()">
+            <span>Wallet</span>
+        </label>
+        <div id="wallet-options" style="display: none;">
+            <label>
+                <input type="radio" name="walletOption" value="phonePay">
+            <img src="images/payment/phonePay.png" alt="PhonePe"> <span>PhonePe</span>
+            </label>
+            <label>
+                <input type="radio" name="walletOption" value="paytm">
+            <img src="images/payment/paytm.png" alt="Paytm"> <span>Paytm</span>
+            </label>
+            <label>
+                <input type="radio" name="walletOption" value="amazonPay">
+            <img src="images/payment/amazonPay.png" alt="Amazon Pay"> <span>Amazon Pay</span>
+            </label>
+            <label>
+                <input type="radio" name="walletOption" value="gPay">
+            <img src="images/payment/gPay.png" alt="Google Pay"> <span>Google Pay</span>
+            </label>
+            <label>
+                <input type="radio" name="walletOption" value="linkAccount">
+                <span>Link Account</span>
+            </label>
+        </div>
+        <label>
+            <input type="radio" name="paymentMethod" value="upi" onclick="showUpiInput()">
+            <img src="images/payment/upi.png" alt="UPI"> <span>UPI</span>
+        </label>
+        <div id="upi-input" style="display: none;">
+            <label>
+                UPI ID
+                <input type="text" name="upiId">
+            </label>
+        </div>
+        <label>
+            <input type="radio" name="paymentMethod" value="netbanking" onclick="netBankingDetails()">
+            <img src="images/payment/netbanking.png" alt="Netbanking"> <span>Netbanking</span>
+            <div id="net-banking" style="display: none;">
+                <label>
+                    NETBANKING
+                    <input type="text" name="netbankingID">
+                </label>
+            </div>
+        </label>
+        <label>
+            <input type="radio" name="paymentMethod" value="card" onclick="showCardDetails()">
+            <img src="images/payment/card.png" alt="Credit/Debit Card"> <span>Credit/Debit Card</span>
+        </label>
+        <div id="card-details" style="display: none;">
+            <label>
+                Card Number
+                <input type="text" name="cardNumber">
+            </label>
+            <label>
+                Expiry Date
+                <input type="text" name="expiryDate">
+            </label>
+            <label>
+                CVV
+                <input type="text" name="cvv">
+            </label>
+        </div>
+        <input type="submit" value="Pay with Money">
+    </form>
+    <script>
+        function showWalletOptions() {
+            const walletOptions = document.querySelector('#wallet-options');
+            walletOptions.style.display = 'block';
+
+            const upiInput = document.querySelector('#upi-input');
+            upiInput.style.display = 'none';
+            const netBanking = document.querySelector('#net-banking');
+            netBanking.style.display = 'none';
+            const cardDetails = document.querySelector('#card-details');
+            cardDetails.style.display = 'none';
+        }
+        function showUpiInput() {
+            const walletOptions = document.querySelector('#wallet-options');
+            walletOptions.style.display = 'none';
+            const upiInput = document.querySelector('#upi-input');
+            upiInput.style.display = 'block';
+            const netBanking = document.querySelector('#net-banking');
+            netBanking.style.display = 'none';
+            const cardDetails = document.querySelector('#card-details');
+            cardDetails.style.display = 'none';
+        }
+        function netBankingDetails() {
+            const walletOptions = document.querySelector('#wallet-options');
+            walletOptions.style.display = 'none';
+            const upiInput = document.querySelector('#upi-input');
+            upiInput.style.display = 'none';
+            const netBanking = document.querySelector('#net-banking');
+            netBanking.style.display = 'block';
+            const cardDetails = document.querySelector('#card-details');
+            cardDetails.style.display = 'none';
+        }
+        function showCardDetails() {
+            const walletOptions = document.querySelector('#wallet-options');
+            walletOptions.style.display = 'none';
+            const upiInput = document.querySelector('#upi-input');
+            upiInput.style.display = 'none';
+            const netBanking = document.querySelector('#net-banking');
+            netBanking.style.display = 'none';
+            const cardDetails = document.querySelector('#card-details');
+            cardDetails.style.display = 'block';
+        }
+    </script> -->
+   <!-- <button id="rzp-button1">Pay with Razorpay</button>
+   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script>
+    var orderId ;
+$(document).ready(function(){
+    var settings = {
+  "url": "/create/orderId",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({
+    "amount": "1"
+  }),
+}; -->
+<!-- 
+//creates new orderId everytime
+// $.ajax(settings).done(function (response) {
+
+//   orderId=response.orderId;
+//   console.log(orderId);
+//   $("button").show();
+// });
+// });
+
+// document.getElementById('rzp-button1').onclick = function(e){
+//    var options = {
+//        "key": "rzp_test_YMP1b4R5kixkm3", // Enter the Key ID generated from the Dashboard
+//        "amount": "1", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+//        "currency": "INR",
+//        "name": "Medicinewala",
+//        "description": "Medicine ",
+//        "image": "https://play-lh.googleusercontent.com/PF-69ng7ZHgdZeoRosU9xo7UYLZ9dhfgcSC8coKkzXWdgdxuthHSb2VflZOLE6rpVHke",
+//        "order_id": orderId, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+//        "handler": function (response){
+//            alert(response.razorpay_payment_id);
+//            alert(response.razorpay_order_id);
+//            alert(response.razorpay_signature)
+//            var settings = {
+//               "url": "/api/payment/verify",
+//                "method": "POST",
+//                "timeout": 0,
+//                "headers": {
+//                   "Content-Type": "application/json"
+//                 },
+//   "data": JSON.stringify({response}),
+// }
+//        },"theme": {
+//            "color": "#3399cc"
+//        }
+//     };
+    //    },
+    //    "prefill": {
+    //        "name": "Akash Kumar",
+    //        "email": "medicinewala13@gmail.com",
+    //        "contact": "9000090000"
+    //    },
+    //    "notes": {
+    //        "address": "Razorpay Corporate Office"
+    //    }
+  
+//     $.ajax(settings).done(function (response) {
+
+// alert(JSON.stringify(response));
+// });
+   
+ 
+//    var rzp1 = new Razorpay(options);
+//    rzp1.on('payment.failed', function (response){
+//            alert(response.error.code);
+//            alert(response.error.description);
+//            alert(response.error.source);
+//            alert(response.error.step);
+//            alert(response.error.reason);
+//            alert(response.error.metadata.order_id);
+//            alert(response.error.metadata.payment_id);
+//    });
+
+//        rzp1.open();
+//        e.preventDefault();
+//    }
+
+// </script>
+// </body>
+
+// </html> -->
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>MediineBooing</title>
+      <link rel="stylesheet" href="book.css">
+   </head>
+   <body>
+      <div class="book_container">
+         <img src="https://i.ibb.co/KsjYw7g/ourlogo.jpg" alt="book_img" class="book_img" />
+         <p class="book_name">Total Price : <span>&#x20B9; <%= price %></span> </p>
+         <!-- <p class="book_author">By </p>
+         <p class="book_price">Price : <span>&#x20B9; <%= price %></span></p> -->
+         <button onclick="handlePayment()" class="buy_btn">Pay now</button>
+      </div>
+      <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+      <script>
+        var price = <%= price %>;
+         function initPayment(data) {
+            var options = {
+               key: "rzp_test_YMP1b4R5kixkm3",
+               amount: data.amount,
+               currency: data.currency,
+               name: "Total Price",
+               description: "Test Transaction",
+               image: "https://i.ibb.co/KsjYw7g/ourlogo.jpg",
+               order_id: data.id,
+               handler: async function(response) {
+                  try {
+                     const verifyUrl = "http://localhost:8080/api/payment/verify";
+                     const res = await fetch(verifyUrl, {
+                        method: "POST",
+                        body: JSON.stringify(response),
+                        headers: {
+                           "Content-type": "application/json; charset=UTF-8"
+                        }
+                     });
+                     const result = await res.json();
+                     console.log(result);
+                  } catch (error) {
+                     console.log(error);
+                  }
+               },
+               theme: {
+                  color: "#3399cc"
+               }
+            };
+            var rzp1 = new Razorpay(options);
+            rzp1.open();
+         }
+         async function handlePayment() {
+            try {
+               const orderUrl = "http://localhost:8080/api/payment/orders";
+               const res = await fetch(orderUrl, {
+                  method: "POST",
+                  body: JSON.stringify({ amount: price}),
+                  headers: {
+                     "Content-type": "application/json; charset=UTF-8"
+                  }
+               });
+               const data = await res.json();
+               console.log(data);
+               initPayment(data.data);
+            } catch (error) {
+               console.log(error);
+            }
+         }
+      </script>
+   </body>
+</html>

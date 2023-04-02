@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>Medicinewala homepage</title>
 </head>
-
 <body>
     <nav id="navbar">
         <div id="logo">
@@ -24,11 +23,7 @@
         </ul>
         <% if (!session) {%>
             <div id="enroll" class="btn">
-
-                <button id="login">user login</button>
-                <form action="/pharmacist" class="login-box" method="post">
-                    <button href="/contact" id="pharmacistlogin">pharmacist login</button>
-                </form>
+                <button id="login">login</button>
                 <div id="signup">
                     <p>Don't have an account?</p>
                     <p id="signuplink">sign up</p>
@@ -49,21 +44,6 @@
             <input type="email" placeholder="Enter Email" name="email" id="login-email" required>
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" id="login-psw" required>
-            <button type="submit" class="btn" id="login_btn">Login</button>
-            <button type="button" class="btn cancel" id="close_btn_login">Close</button>
-        </form>
-    </div>
-    <div class="popup-loginform" id="login-form">
-        <form action="/login" class="login-box" method="post">
-            <div class="login-head">
-                <h1>Pharmacist-login</h1>
-            </div>
-            <label for="email"><b>Email</b></label>
-            <input type="email" placeholder="Enter Email" name="email" id="login-email" required>
-            <label for="psw"><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="psw" id="login-psw" required>
-            <label for="psw"><b>Secret key</b></label>
-            <input type="password" placeholder="Enter your Secret key" name="psw" id="login-psw" required>
             <button type="submit" class="btn" id="login_btn">Login</button>
             <button type="button" class="btn cancel" id="close_btn_login">Close</button>
         </form>
@@ -156,89 +136,79 @@
                     <button id="cnfm-ok1" class="cnfm-ok" onclick=cnfm_login_close1()>OK</button>
                 </div>
             </div>
-            <%} else if (not_registered && !invalid) { %>
-                <div class="popup-cnfm" id="login-err">
+        <%}
+        else if (not_registered && !invalid) { %>
+            <div class="popup-cnfm" id="login-err">
+                <div class="cnfm-icon">
+                    <i class="material-icons login_error">&#xe000;</i>
+                </div>
+                <h3 class="cnfm-head">Oops!</h3>
+                <div class="cnfm-para">
+                    <p>You have not registered. Please sign up.</p>
+                </div>
+                <div class="cnfm-btn">
+                    <button id="cnfm-ok2" class="cnfm-ok" onclick=cnfm_login_close2()>OK</button>
+                </div>
+            </div>
+            <% } else if (!not_registered && invalid) { %>
+                <div class="popup-cnfm" id="login-invalid">
                     <div class="cnfm-icon">
                         <i class="material-icons login_error">&#xe000;</i>
                     </div>
                     <h3 class="cnfm-head">Oops!</h3>
                     <div class="cnfm-para">
-                        <p>You have not registered. Please sign up.</p>
+                        <p>Invalid login credentials.</p>
                     </div>
                     <div class="cnfm-btn">
-                        <button id="cnfm-ok2" class="cnfm-ok" onclick=cnfm_login_close2()>OK</button>
+                        <button id="cnfm-ok3" class="cnfm-ok" onclick=cnfm_login_close3()>OK</button>
                     </div>
                 </div>
-                <% } else if (!not_registered && invalid) { %>
-                    <div class="popup-cnfm" id="login-invalid">
-                        <div class="cnfm-icon">
-                            <i class="material-icons login_error">&#xe000;</i>
-                        </div>
-                        <h3 class="cnfm-head">Oops!</h3>
-                        <div class="cnfm-para">
-                            <p>Invalid login credentials.</p>
-                        </div>
-                        <div class="cnfm-btn">
-                            <button id="cnfm-ok3" class="cnfm-ok" onclick=cnfm_login_close3()>OK</button>
-                        </div>
-                    </div>
-                    <% } %>
-                        <div class="chatbot">
-                            <button class="chat-icon" onclick="location.href='/chatbot';" id="chatbot_btn"></button>
-                        </div>
-                        <section class="slider">
-                            <div class="img_box">
-                                <img class="mySlides" src="images/homepage/event1.jpg">
-                                <img class="mySlides" src="images/homepage/event2.jpg">
-                                <img class="mySlides" src="images/homepage/event3.jpg">
-                            </div>
-                            <button class="w3-button w3-display-left" onclick=plusDivs(-1)>&#10094;</button>
-                            <button class="w3-button w3-display-right" onclick=plusDivs(+1)>&#10095;</button>
-                        </section>
-                        <section class="services">
-                            <h1>Our Services</h1>
-                            <div id="doctors" class="box">
-                                <img src="images/homepage/doctors.jpg" alt="error">
-                                <h3>Consultation</h3>
-                                <p>Consult qualified and registered doctors on video call from your home. Skip the queue
-                                    and book your
-                                    appointment before hand or at the instant if you are in a hurry. Our Expert doctors
-                                    will try to help you
-                                    in every way possible while you are at your home and will ensure your utmost care
-                                    and privacy.</p>
-                            </div>
-                            <div id="lab" class="box">
-                                <img src="images/homepage/labtest.jpg" alt="error">
-                                <h3>Lab tests</h3>
-                                <p>Book lab tests online for home sample collection service. Choose from the wide array
-                                    of medical tests
-                                    available to you to be done from the comfort of your home. We assure a 100% safe and
-                                    hygenic experience
-                                    with minimal discomfort, quick and accurate reports. Also receive your reports
-                                    Online thus making them
-                                    easy to store.</p>
-                            </div>
-                            <div id="pharmacy" class="box">
-                                <img src="images/homepage/medicines.jpg" alt="error">
-                                <h3>Pharmacy</h3>
-                                <p>Order medicines and health products online and get it delivered at home from licensed
-                                    pharmacies without
-                                    the hassle of searching for a pharmacy near by.Choose from the wide variety of
-                                    medicines available with
-                                    us without having to struggle to find the right medicines needed by you.</p>
-                            </div>
-                            <div id="predict" class="box">
-                                <img src="images/homepage/prediction.jpg" alt="error">
-                                <h3>Diagnostic prediction</h3>
-                                <p>Our advanced feature to predict what illness you might have from the results of your
-                                    lab test. This would
-                                    ensure that users can get an idea on whom to consult and what condition they might
-                                    have. Please do note
-                                    that this is a predictive feature and not completely accurate please consult your
-                                    Doctor for more
-                                    accurate diagnosis.</p>
-                            </div>
-                            <!-- </section>
+                <% } %>
+    <div class="chatbot">
+        <button class="chat-icon" onclick="location.href='/chatbot';" id="chatbot_btn"></button>
+    </div>
+    <section class="slider">
+        <div class="img_box">
+            <img class="mySlides" src="images/homepage/event1.jpg">
+            <img class="mySlides" src="images/homepage/event2.jpg">
+            <img class="mySlides" src="images/homepage/event3.jpg">
+        </div>
+        <button class="w3-button w3-display-left" onclick=plusDivs(-1)>&#10094;</button>
+        <button class="w3-button w3-display-right" onclick=plusDivs(+1)>&#10095;</button>
+    </section>
+    <section class="services">
+        <h1>Our Services</h1>
+        <div id="doctors" class="box">
+            <img src="images/homepage/doctors.jpg" alt="error">
+            <h3>Consultation</h3>
+            <p>Consult qualified and registered doctors on video call from your home. Skip the queue and book your
+                appointment before hand or at the instant if you are in a hurry. Our Expert doctors will try to help you
+                in every way possible while you are at your home and will ensure your utmost care and privacy.</p>
+        </div>
+        <div id="lab" class="box">
+            <img src="images/homepage/labtest.jpg" alt="error">
+            <h3>Lab tests</h3>
+            <p>Book lab tests online for home sample collection service. Choose from the wide array of medical tests
+                available to you to be done from the comfort of your home. We assure a 100% safe and hygenic experience
+                with minimal discomfort, quick and accurate reports. Also receive your reports Online thus making them
+                easy to store.</p>
+        </div>
+        <div id="pharmacy" class="box">
+            <img src="images/homepage/medicines.jpg" alt="error">
+            <h3>Pharmacy</h3>
+            <p>Order medicines and health products online and get it delivered at home from licensed pharmacies without
+                the hassle of searching for a pharmacy near by.Choose from the wide variety of medicines available with
+                us without having to struggle to find the right medicines needed by you.</p>
+        </div>
+        <div id="predict" class="box">
+            <img src="images/homepage/prediction.jpg" alt="error">
+            <h3>Diagnostic prediction</h3>
+            <p>Our advanced feature to predict what illness you might have from the results of your lab test. This would
+                ensure that users can get an idea on whom to consult and what condition they might have. Please do note
+                that this is a predictive feature and not completely accurate please consult your Doctor for more
+                accurate diagnosis.</p>
+        </div>
+    </section>
     <section class="partners">
         <h1>Our Partners</h1>
         <div class="partner-container">
@@ -247,15 +217,15 @@
             <img src="images/homepage/partner3.png" alt="error">
             <img src="images/homepage/partner4.png" alt="error">
         </div>
-    </section> -->
-                            <footer>
-                                copyright &copy; www.Medicinewala.com. All rights reserved!
-                            </footer>
-                            <script type="text/javascript" src="app.js"></script>
-                            <script type="text/javascript" src="chat_frontend.js"></script>
-                            <script type="text/javascript" src="book_frontend.js"></script>
-                            <script type="text/javascript" src="slider.js"></script>
-                            <script></script>
+    </section>
+    <footer>
+        copyright &copy; www.Medicinewala.com. All rights reserved!
+    </footer>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="chat_frontend.js"></script>
+    <script type="text/javascript" src="book_frontend.js"></script>
+    <script type="text/javascript" src="slider.js"></script>
+    <script></script>
 </body>
 
 </html>
