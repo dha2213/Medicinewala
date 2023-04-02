@@ -238,110 +238,10 @@ html{
     opacity: 1;
 }
 
-/* for chatbot */
-
-.chat-icon{
-    background: url('images/chatbot.jpg') no-repeat center center/cover;
-    display: flex;
-    position: fixed;
-    bottom: 100px;
-    right: 40px;
-    z-index: 2;
-    height: 60px;
-    width: 70px;
-    border-radius: 20px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-.chat-icon:hover{
-    cursor: pointer;
-}
-
-/* for intro */
-
-.medintro{
-    width: 100%;
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    color: rgb(255, 255, 255);
-}
-.medintro::before{
-    content: '';
-    position: absolute;
-    background: url('images/medicine/medicine_background.jpg') no-repeat center center/cover;
-    z-index: -1;
-    opacity: 0.6;
-    width: 100%;
-    height: 400px;
-}
-.medintro > h3{
-    padding-top: 150px;
-    font-size: 2.5rem;
-    padding-bottom: 7px;
-}
-.medintro > p{
-    font-size: 1.2rem;
-}
-
-/* for medicines */
-
-.medicines > h1{
-    margin-top: 25px;
-    font-size: 2rem;
-    padding: 20px;
-    text-align: center;
-    color: rgb(119, 117, 117);
-}
-.medicines > form{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-.medicines > form .med-box {
-    display: flex;
-    border: 2px solid black;
-    width: 45%;
-    background-color: #ff739275;
-    margin: 10px;
-    border-radius: 5px;
-}
-.medicines > form .med-box > img {
-    margin: 10px 35px;
-    height: 200px;
-    width: 300px;
-}
-.medicines > form .med-info{
-    margin-top: 80px;
-    text-align: center;
-}
-.count{
-    margin-top: 80px;
-    margin-left: auto;
-    margin-right: 20px;
-}
-.ordermed{
-    margin: 30px;
-    text-align: center;
-}
-.medbtn{
-    font-size: 1.2rem;
-    height: 50px;
-    width: 400px;
-    border-radius: 20px;
-    color: rgb(69, 76, 82);
-    border: 2px soild black;
-    background-color: rgb(247, 115, 115);
-}
-.medbtn:hover{
-    background-color: rgb(247, 71, 71);
-    cursor: pointer;
-    color: rgb(255, 255, 255);
-}
-
-/* for confirmation */
+/* for signup confirmation */
 
 .popup-cnfm{
+    display: block;
     z-index: 9;
     border-radius: 10px;
     width: 400px;
@@ -387,50 +287,149 @@ html{
     cursor: pointer;
     background-color: rgb(95, 156, 2);
 }
-.booking-med-err{
+.login_error{
     background-color: rgb(236, 80, 80);
 }
-#booking-err2-ok{
+#cnfm-ok2, #cnfm-ok3{
     background-color: rgb(236, 80, 80);
 }
-.container-fluid
-{
-width: 100%;
-height: auto;
-padding: 0px 0px 80px 0px;
+/* for chatbot */
+
+.chat-icon{
+    background: url('images/chatbot.jpg') no-repeat center center/cover;
+    display: flex;
+    position: fixed;
+    bottom: 100px;
+    right: 40px;
+    z-index: 2;
+    height: 60px;
+    width: 70px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-.container
-{
-width: 1200px;
-height: auto;
-margin: auto;
+.chat-icon:hover{
+    cursor: pointer;
 }
-.container .search
-{
-display: flex;
-padding: 30px 0px;
-justify-content: space-between;
+
+/* for slider */
+
+.slider{
+    overflow: hidden;
+    width: 1000px;
+    justify-content: center;
+    margin-left: 270px;
 }
-.container .search h1
-{
-letter-spacing: 3px;
-display: inline-block;
-border-bottom: 2px solid rgb(50, 86, 165);
-padding-bottom: 10px;
+.img_box{
+    width: 3000px;
+    display: flex;
 }
-.container .search input
-{
-width: 60%;
-padding: 5px 16px;
-background: transparent;
-border: 1px solid #000;
-font-size: 20px;
-text-transform: capitalize;
-letter-spacing: 3px;
-outline: none;
+.mySlides{
+
+    width: 1000px;
+    height: 600px;
 }
-.container .search input::placeholder
-{
-color: rgb(62, 78, 171);
-font-weight: 500;
+.w3-button{
+    position: absolute;
+    left: 270px;
+    top: 350px;
+    width: 30px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+}
+.w3-display-right{
+    left: 1240px;
+}
+.w3-button:hover{
+    background-color: rgb(197, 197, 197);
+}
+
+/* for Our services */
+
+.services{
+    padding: 3px 70px;
+}
+.services h1{
+    margin-top: 50px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 35px;
+    color: rgb(10, 10, 10);
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Roboto Slab', serif;
+}
+
+.box {
+    padding: 30px 30px;
+    margin: 13px 0px;
+    border-radius: 28px;
+    background: #288f94;
+    margin-bottom: 20px;
+    width: 600px;
+    display: inline-block;
+    color: white;
+}
+h3{
+    margin-top: 10px;
+    color: black;
+    font-size: 1.4rem;
+}
+#lab{
+    float: right;
+}
+#predict{
+    float: right;
+}
+.box img {
+    height: 160px;
+    margin: auto;
+    display: block;
+    border-radius: 10px;
+}
+/* for Our partners */
+
+.partners{
+    position: relative;
+    height: 300px;
+}
+.partners::before{
+    content: "";
+    position: absolute;
+    background: url('images/homepage/Hand_Shaking.png') no-repeat center center/cover;
+    z-index: -1;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+}
+.partners h1{
+    padding-top: 50px;
+    text-align: center;
+    font-size: 35px;
+    font-family: 'Montserrat', sans-serif;
+    font-family: 'Roboto Mono', monospace;
+    font-family: 'Roboto Slab', serif;
+}
+.partner-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 28px;
+}
+.partner-container img{
+    height: 120px;
+    width: 160px;
+    display: block;
+    margin: 10px 38px;
+}
+
+/* for footer */
+
+footer{
+    margin-bottom: 10%;
+    background-color: rgb(95, 93, 93);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    
 }

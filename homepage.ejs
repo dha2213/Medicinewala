@@ -23,7 +23,10 @@
         </ul>
         <% if (!session) {%>
             <div id="enroll" class="btn">
-                <button id="login">login</button>
+                <button id="login">user login</button>
+                <form action="/pharmacist" class="login-box" method="post">
+                    <button href="/contact" id="pharmacistlogin">pharmacist login</button>
+                </form>
                 <div id="signup">
                     <p>Don't have an account?</p>
                     <p id="signuplink">sign up</p>
@@ -44,6 +47,21 @@
             <input type="email" placeholder="Enter Email" name="email" id="login-email" required>
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" id="login-psw" required>
+            <button type="submit" class="btn" id="login_btn">Login</button>
+            <button type="button" class="btn cancel" id="close_btn_login">Close</button>
+        </form>
+    </div>
+    <div class="popup-loginform" id="login-form">
+        <form action="/login" class="login-box" method="post">
+            <div class="login-head">
+                <h1>Pharmacist-login</h1>
+            </div>
+            <label for="email"><b>Email</b></label>
+            <input type="email" placeholder="Enter Email" name="email" id="login-email" required>
+            <label for="psw"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" id="login-psw" required>
+            <label for="psw"><b>Secret key</b></label>
+            <input type="password" placeholder="Enter your Secret key" name="psw" id="login-psw" required>
             <button type="submit" class="btn" id="login_btn">Login</button>
             <button type="button" class="btn cancel" id="close_btn_login">Close</button>
         </form>

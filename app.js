@@ -51,6 +51,9 @@ app.set('view engine', 'ejs');
 app.get('/', (req, res) => {
     res.render(path.join(__dirname, 'homepage'), { 'session': session.loggedin, 'not_registered': 1, 'invalid': 1,'alreadyAccount':1 });
 });
+app.post('/pharmacist', (req, res) => {
+  res.render(path.join(__dirname, './pharmacist/homepage.ejs'), { 'session': session.loggedin, 'not_registered': 1, 'invalid': 1, 'alreadyAccount': 1 });
+});
 app.get('/contact', (req, res) => {
     res.render(path.join(__dirname, 'contact'), { 'session': session.loggedin });
 });
@@ -155,7 +158,58 @@ db.once("open", function () {
 //         },
 // });
 const User = mongoose.model('User', usrSchema);
-
+const pharmacistSchema = new mongoose.Schema({
+  Id: String,
+  Name: {
+    type: String,
+    required: true,
+  },
+  Email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  Password: {
+    type: String,
+    required: true,
+  },
+  Address: {
+    type: String,
+    required: true,
+  },
+  Phone: {
+    type: String,
+    required: true,
+  },
+  Gender: {
+    type: String,
+    required: true,
+  },
+  DOB: {
+    type: Date,
+    required: true,
+  },
+  emailVerification: {
+    token: {
+      type: String,
+      required: true,
+    },
+    otp: {
+      type: Number,
+      required: true,
+    },
+    verified: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
+});
+// const pharmacistSchema = new mongoose.Schema({
+//   // Id: String, Type: String, UserId: String, DoctorId: String, DoctorName: String, DoctorField: String, TestId: String, TestName: String, TestResult: String, MedicineId: String, MedicineName: String, Date: Date, Quantity: Number
+//   Id: String, Name: String, Quantity: Number
+// });
+const pharmacist = mongoose.model('pharmacist', pharmacistSchema);
 const bookSchema = new mongoose.Schema({
     Id: String,Price: Number, Type: String, UserId: String, DoctorId: String, DoctorName: String, DoctorField: String, TestId: String, TestName: String, TestResult: String, MedicineId: String, MedicineName: String, Date: Date, Quantity: Number
 });
@@ -177,7 +231,7 @@ const testSchema = new mongoose.Schema({
 const Test = mongoose.model('Test', testSchema);
 
 const medSchema = new mongoose.Schema({
-    Id: String, Price: Number, Name: String, Quantity: Number
+    Id: String, Price: Number, Expirydate: Date, Name: String, Quantity: Number
 });
 const Medicine = mongoose.model('Medicine', medSchema);
 
@@ -213,6 +267,258 @@ const addressSchema = new mongoose.Schema({
 });
 
 const Address = mongoose.model('Address', addressSchema);
+
+var flag_u1 = 1;
+localStorage.setItem(flag_u1);
+
+app.post('/pharmaSignup', (req, res) => {
+  const { name, email, password, address, cntc, gender, dob, avatar } = req.body;
+
+  localStorage.getItem(flag_u1);
+  var u_id = "U" + 0 + flag_u1;
+  flag_u = flag_u1 + 1;
+  localStorage.setItem(flag_u);
+
+  // Check if user already exists with this email
+  // var tr = 0
+  console.log(email)
+  pharmacist.findOne({ Email: email })
+    .then((user) => {
+      if (user) {
+        // User already exists with this email
+        res.render(path.join(__dirname, './pharmacist/homepage.ejs'), { 'session': session.loggedin, 'not_registered': 1, 'invalid': 0, 'alreadyAccount': 0 });
+        return;
+      }
+
+      // Generate OTP
+      const otp = Math.floor(100000 + Math.random() * 900000);
+
+      // Create user with hashed password
+      bcrypt.hash(password, 10)
+        .then((hashedPassword) => {
+          const user = new pharmacist({
+            Id: u_id,
+            Name: name,
+            Email: email,
+            Password: password,
+            Address: address,
+            Phone: cntc,
+            Gender: gender,
+            DOB: dob,
+            emailVerification: {
+              token: uuidv4(),
+              otp,
+              verified: false,
+            },
+          });
+
+
+          // Save user to database
+          console.log(email)
+          user.save();
+        })
+        .then(() => {
+          // Send OTP to user's email
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'medicinewala13@gmail.com', // Change this to your email address
+              pass: 'obgnbityicxuzwqi', // Change this to your email password or use environment variable
+            },
+          });
+
+          const mailOptions = {
+            from: 'medicinewala13@gmail.com', // Change this to your email address
+            to: email,
+            subject: 'Email Verification',
+            html: `<p>Your OTP for email verification is: <strong>${otp}</strong></p>`,
+          };
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log('Email sent: ' + info.response);
+              // do something useful
+            }
+          });
+        })
+        .then(() => {
+          console.log(email)
+          email1 = email
+          res.render(path.join(__dirname, './pharmacist/pharmaverifyotp.ejs'), {
+            email: email,
+            error: '',
+          });
+          return;
+        })
+        .catch((err) => console.log(err.message));
+    })
+    .catch((err) => console.log(err.message));
+});
+app.post('/pharmaverifyotp', (req, res) => {
+
+  const { otp } = req.body;
+  // const email = req.query.email;
+  console.log(otp)
+  console.log(email1)
+  pharmacist.findOne({ Email: email1 })
+    .then((user) => {
+      // console.log(email1)
+      // console.log(user)
+      if (!user) {
+        console.log(user)
+        // User not found with this email
+        res.render(path.join(__dirname, './pharmacist/pharmaverifyotp.ejs'), {
+          email: email1,
+          error: 'User not found with this email!',
+        });
+        return;
+      }
+
+      if (user.emailVerification.otp != otp) {
+        res.render(path.join(__dirname, './pharmacist/pharmaverifyotp.ejs'), {
+          email: email1,
+          error: 'Invalid OTP. Please try again!',
+        });
+        return;
+      }
+
+      // console.log('jaykishorw')
+      // OTP is valid. Set email verification to verified and save user details to database.
+      user.emailVerification.verified = true;
+      user.save()
+        .then(() => {
+          session.loggedin = true;
+          session.email = email1;
+          res.render(path.join(__dirname, './pharmacist/homepage.ejs'), { 'session': session.loggedin, 'not_registered': 0, 'invalid': 0, 'alreadyAccount': 1 });
+          return;
+        })
+        .catch(err => console.log(err.message));
+    })
+    .catch((err) => console.log(err.message));
+});
+
+app.post('/pharmaresendotp', (req, res) => {
+  // const { email } = req.body;
+
+  pharmacist.findOne({ Email: email1 })
+    .then((user) => {
+      if (!user) {
+        // User not found with this email
+        res.render(path.join(__dirname, './pharmacist/pharmaverifyotp.ejs'), {
+          email: email1,
+          error: 'User not found with this email!',
+        });
+        return;
+      }
+
+      // Generate new OTP and save to user details in database
+      const newOtp = Math.floor(100000 + Math.random() * 900000);
+      user.emailVerification.otp = newOtp;
+      user.save()
+        .then(() => {
+          // Send new OTP to user's email
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: 'medicinewala13@gmail.com', // Change this to your email address
+              pass: 'obgnbityicxuzwqi', // Change this to your email password or use environment variable
+            },
+          });
+
+          const mailOptions = {
+            from: 'medicinewala13@gmail.com', // Change this to your email address
+            to: email1,
+            subject: 'Email Verification',
+            html: `<p>Your new OTP for email verification is: <strong>${newOtp}</strong></p>`,
+          };
+
+          transporter.sendMail(mailOptions);
+        })
+        .then(() => {
+          res.render(path.join(__dirname, './pharmacist/pharmaverifyotp.ejs'), {
+            email: email1,
+            error: '',
+          });
+          return;
+        })
+        .catch((err) => console.log(err.message));
+    })
+    .catch((err) => console.log(err.message));
+});
+app.post('/pharmalogin', (req, res) => {
+  const { email, psw } = req.body;
+
+  //   //dhananjay yadav
+  //   User.findById(req.body.Id)
+  // .then(user => {
+  //   const  verified = req.body.emailVerification.verified;
+  //   console.log(verified); // will log either `true` or `false`
+  // })
+  // .catch(error => {
+  //   console.error(error);
+  // });
+  pharmacist.findOne({ 'Email': email }, 'Password', (err, user) => {
+    if (!user) {
+      res.render(path.join(__dirname, './pharmacist/homepage.ejs'), { 'session': session.loggedin, 'not_registered': 1, 'invalid': 0, 'alreadyAccount': 1 });
+    }
+
+    else if (user.Password == psw) {
+      session.loggedin = true;
+      session.email = email;
+      res.render(path.join(__dirname, './pharmacist/homepage'), { 'session': session.loggedin, 'not_registered': 0, 'invalid': 0, 'alreadyAccount': 1 });
+    } else if (user.Password != psw) {
+      res.render(path.join(__dirname, './pharmacist/homepage'), { 'session': session.loggedin, 'not_registered': 0, 'invalid': 1, 'alreadyAccount': 1 });
+    }
+  });
+});
+
+app.get('/pharmaprofile', (req, res) => {
+  if (session.loggedin) {
+    pharmacist.findOne({ 'Email': session.email }, (err, user) => {
+          // Booking.find({ 'UserId': user.Id }, (err, book) => {
+              const name = user.Name;
+              const [f, s, l] = name.split(' ')
+              user.f = f;
+              // var consult=[]; var test=[]; var med=[];
+              // for( var i=0; i<book.length; i++) {
+              //     if (book[i].Type=='Consultation') {
+              //         consult.push(book[i]);
+              //     } else if (book[i].Type == 'Lab Test') {
+              //         test.push(book[i]);
+              //     } else {
+              //         med.push(book[i]);
+              //     }
+              // }   
+              res.render(path.join(__dirname, './pharmacist/pharmaprofile'), { 'usr': user});
+          // });
+      });
+  }
+  else {
+      res.send('Please login to view this page.');
+  }
+});
+app.post('/Updatemedicine', (req, res) => {
+  if (!session.loggedin) {
+    res.render(path.join(__dirname, './pharmacist/homepage.ejs'), { 'session': session.loggedin, 'booking': 'error' });
+  } else {
+
+    const { medicinename, price, expirydate, quantity } = req.body
+    const med = new Medicine({
+      Name: medicinename,
+      Price: price,
+      Expirydate: expirydate, 
+      Quantity: quantity
+
+    })
+
+    // Save user to database
+    // console.log(email)
+    med.save();
+    res.render(path.join(__dirname, './pharmacist/homepage.ejs'), { 'session': session.loggedin, 'not_registered': 0, 'invalid': 0, 'alreadyAccount': 1 });
+  }
+});
 var flag_u = 1;
 localStorage.setItem(flag_u);
 // app.post('/signup', (req, res) => {
@@ -236,7 +542,7 @@ app.post('/signup', (req, res) => {
     const { name, email, password, address, cntc, blood, gender, dob } = req.body;
   
     localStorage.getItem(flag_u);
-    u_id = "U" + 0 + flag_u;
+    var u_id = "U" + 0 + flag_u;
     flag_u = flag_u + 1;
     localStorage.setItem(flag_u);
 

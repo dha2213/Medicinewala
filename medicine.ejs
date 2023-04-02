@@ -124,6 +124,14 @@
     </section>
     <section class="medicines">
         <h1>Medicines</h1>
+        <div class="container-fluid">
+            <div class="container">
+                <div class="search">
+                    <h1>All Medicines</h1>
+                    <input type="text" name="" id="find" placeholder="search here...." onkeyup="search()">
+                </div>
+            </div>
+        </div>
         <form action="/book_medicine" method="post">
             <div class="med-box">
                 <img src="images/medicine/dolo.webp" alt="error">
@@ -393,5 +401,6 @@
     <script type="text/javascript" src="app.js"></script>
     <script type="text/javascript" src="chat_frontend.js"></script>
     <script type="text/javascript" src="book_frontend.js"></script>
+    <script type="text/javascript" src="search.js"></script>
 </body>
 </html>
