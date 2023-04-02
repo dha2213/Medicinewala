@@ -914,9 +914,9 @@ app.post('/book_medicine', (req, res) => {
         }
       });
     }
-<<<<<<< HEAD
+
   }
-=======
+
 });
 app.post('/test_booking', (req, res) => {
     const { date, time, usrId, testIds } = req.body;
@@ -1034,7 +1034,6 @@ app.post('/book_medicine', (req, res) => {
             });
         }
     }   
->>>>>>> 4b822e8e8abc06001891ea762b2abe11633da15f
 });
 
 app.post('/contact_us', (req, res) => {
