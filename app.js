@@ -226,7 +226,7 @@ const docSchema = new mongoose.Schema({
 const Doctor = mongoose.model('Doctor', docSchema);
 
 const testSchema = new mongoose.Schema({
-    Id: String, Name: String
+    Id: String, Name: String,Price: Number
 });
 const Test = mongoose.model('Test', testSchema);
 
@@ -972,7 +972,7 @@ app.post('/consult_booking', (req, res) => {
     }
     else {
         localStorage.getItem(flag_b);
-        b_id = "B" + 0 + flag_b;
+        var b_id = "B" + 0 + flag_b;
         flag_b = flag_b + 1;
         localStorage.setItem(flag_b);
         const book = new Booking();
@@ -1012,6 +1012,7 @@ app.post('/book_test', (req, res) => {
         res.render(path.join(__dirname, 'lab_test'), { 'session': session.loggedin, 'usr': null, 'testIds': testIds, 'booking': null, 'disease': -1 });
     }
 });
+var flag_b=1;
 app.post('/test_booking', (req, res) => {
     const { date, time, usrId, testIds } = req.body;
     if (!usrId) {
@@ -1020,7 +1021,7 @@ app.post('/test_booking', (req, res) => {
     else {
         var arr = testIds.split(',');
         localStorage.getItem(flag_b);
-        b_id = "B" + 0 + flag_b;
+        var b_id = "B" + 0 + flag_b;
         flag_b = flag_b + 1;
         localStorage.setItem(flag_b);
         for (var i=0; i<arr.length; i++) {
